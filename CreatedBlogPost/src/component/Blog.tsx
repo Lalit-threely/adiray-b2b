@@ -23,11 +23,27 @@ const Blog: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
+  const DeletePost = (post_id: string) => {
+    try {
+      axios.delete(`http://localhost:8080/api/posts/${post_id}`).then((response: AxiosResponse) => {
+        if (response.status === 200) {
+          setBlogPosts(blogPosts.filter(post => post._id !== post_id));
+          
+        } else {
+          console.error('Unexpected status code:', response.status);
+        }
+      });
+    } catch (error) {
+      throw new Error('Error during deleting the post');
+    }
+  };
+
   useEffect(() => {
     axios
       .get<BlogPost[]>('http://localhost:8080/api/posts/')
       .then((response: AxiosResponse<BlogPost[]>) => {
         setBlogPosts(response.data);
+
         setLoading(false);
       })
       .catch((error) => {
@@ -57,6 +73,7 @@ const Blog: React.FC = () => {
 
   return (
     <div className="relative w-full flex justify-center shadow-md">
+      <img className="absolute opacity-20 -z-1 object-cover w-full h-full -z-0" src='.' alt="background" />
       <div className="p-8 px-[10vw] z-[5] max-w-[1300px] flex flex-col justify-center  ">
         <div className="mb-6 md:flex justify-between items-center">
           <h1 data-aos={shouldAnimate ? 'slide-right' : ''} className="text-[clamp(35px,3.5vw,5rem)] font-Mont font-bold">
@@ -81,7 +98,7 @@ const Blog: React.FC = () => {
           </div>
         </div>
         <div className="flex flex-col gap-6">
-          {filteredPosts.map((post: BlogPost) => (
+          {filteredPosts.sort((a:any, b:any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((post: BlogPost) => (
             <div key={post._id} className="flex flex-col md:flex-row gap-6">
               <div className="flex-shrink-0  md:w-1/3">
                 <Link to={`/admin/blogposts/${post._id}`}>
@@ -95,6 +112,11 @@ const Blog: React.FC = () => {
                   </Link>
                 </h2>
                 <p className="text-gray-700">{extractFirst20Words(post.description)}</p>
+              </div>
+              {/* Add Update and Delete Buttons */}
+              <div className="flex gap-2">
+                <Link to={`/admin/posts/${post._id}`} className="bg-yellow-500 h-[2.5rem] text-white py-2 px-4 rounded-md hover:bg-yellow-600">Update</Link>
+                <button onClick={()=>{DeletePost(post._id)}} className="bg-red-500 text-white py-2 px-4  h-[2.5rem] rounded-md hover:bg-red-600">Delete</button>
               </div>
             </div>
           ))}

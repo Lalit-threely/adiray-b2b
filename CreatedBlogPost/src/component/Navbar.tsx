@@ -18,12 +18,6 @@ const Navbar = () => {
             <Link to="/admin/posts" className="text-gray-300 hover:text-white transition duration-300">
               CreatePost
             </Link>
-            <Link to="/admin/posts" className="text-gray-300 hover:text-white transition duration-300">
-              UpdatePost
-            </Link>
-            <a href="https://adiray.com" className="text-gray-300 hover:text-white transition duration-300">
-              My Blog
-            </a>
           </div>
         </div>
       </div>

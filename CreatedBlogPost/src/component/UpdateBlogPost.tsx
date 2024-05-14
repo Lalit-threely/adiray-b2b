@@ -87,7 +87,7 @@ const UpdateBlog = () => {
   };
 
   return (
-    <div className="mx-auto md:max-w-xl mx-auto m-8 mt-8 p-8">
+    <div className="mx-auto md:max-w-xl mx-auto shadow-lg  m-8 mt-8 p-8">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="flex flex-col">
           <label className="text-gray-800 font-bold">Author</label>
